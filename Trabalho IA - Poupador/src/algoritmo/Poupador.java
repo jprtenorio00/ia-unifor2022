@@ -8,14 +8,14 @@ public class Poupador extends ProgramaPoupador {
 	int coin = 4;
 	int bank = 3;
 	int power_pellet = 5;
-		
+
 	@Override
 	public int acao() {
 		int[] vision = this.sensor.getVisaoIdentificacao();
 		int wallet = this.sensor.getNumeroDeMoedas();
 		Point position = this.sensor.getPosicao();
 		Point posBank;
-		
+
 		if (wallet >= 15) {
 			if (vision[7] == bank || vision[2] == bank) {
 				posBank = position;
@@ -37,13 +37,13 @@ public class Poupador extends ProgramaPoupador {
 		}
 		// Integer[] visionCopy = Arrays.stream(vision).boxed().toArray(Integer[]::new);
 		// int coin = Arrays.asList(visionCopy).indexOf(coin);
-		
+
 		// 0  1  2  3  4
 		// 5  6  7  8  9
 		// 10 11 [] 12 13
 		// 14 15 16 17 18
 		// 19 20 21 22 23
-		
+
 		if (vision[7] == coin) {
 			return 1;
 		} else if (vision[16] == coin) {

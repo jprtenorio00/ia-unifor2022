@@ -1,4 +1,4 @@
-package algoritmo;
+/*package algoritmo;
 
 import java.awt.Point;
 
@@ -70,4 +70,4 @@ public class PoupadorAntigo extends ProgramaPoupador {
 		return (int) (Math.random() * 5);
 	}
 
-}
+}*/

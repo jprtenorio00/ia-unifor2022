@@ -159,22 +159,17 @@ public class Poupador extends ProgramaPoupador {
 	public boolean Pegarpastilha() {
 		if (this.wallet > 5) {
 			int[] smell = this.sensor.getAmbienteOlfatoLadrao();
-			boolean iAllZero = false;
+			int count = 0;
 			for (int s : smell) {
-				iAllZero = s <= 0;
+				count += s;
 			}
 			//Se não tiver ladrão por perto não pega pastilha
-			if (iAllZero) return false;
-
-			for (int s : smell) {
-				//Quanto mais forte for o cheiro mais chances tem de o poupador pegar a pastilha
-				return new Random().nextInt(s) == 0;
-			}
+			if (count == 0) return false;
+			//Quanto mais forte for o cheiro mais chances tem de o poupador pegar a pastilha
+			else return new Random().nextInt(count) == 0;
 		} else {
 			return false;
 		}
-
-		return false;
 	}
 
 }

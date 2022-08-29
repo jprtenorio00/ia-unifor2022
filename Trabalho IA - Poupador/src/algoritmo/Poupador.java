@@ -1,6 +1,7 @@
 package algoritmo;
 
 import java.awt.Point;
+import java.util.Random;
 
 //import java.awt.Point;
 
@@ -152,6 +153,28 @@ public class Poupador extends ProgramaPoupador {
 		}
 		
 		return (int) (Math.random() * 5);
+	}
+
+	//Chamar essa função toda vez que aparecer uma pastilha do poder na visão
+	public boolean Pegarpastilha() {
+		if (this.wallet > 5) {
+			int[] smell = this.sensor.getAmbienteOlfatoLadrao();
+			boolean iAllZero = false;
+			for (int s : smell) {
+				iAllZero = s <= 0;
+			}
+			//Se não tiver ladrão por perto não pega pastilha
+			if (iAllZero) return false;
+
+			for (int s : smell) {
+				//Quanto mais forte for o cheiro mais chances tem de o poupador pegar a pastilha
+				return new Random().nextInt(s) == 0;
+			}
+		} else {
+			return false;
+		}
+
+		return false;
 	}
 
 }

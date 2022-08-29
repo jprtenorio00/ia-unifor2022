@@ -27,10 +27,39 @@ public class Poupador extends ProgramaPoupador {
 		map[position.x][position.y]++;
 		
 		if(explore){
-			if(position.x==0) {
+			if(position.x==0 && position.y==0){
+				while(pace==0 || pace==4 || pace==1){
+					pace = (int) r.nextInt(4-1) + 1;
+					if(pace == 4 && map[position.x-1][position.y]>map[position.x][position.y]){
+						pace = 0;
+					}else if(pace == 1 && map[position.x][position.y-1]>map[position.x][position.y]){
+						pace = 0;
+					}
+				}
+				return pace;
+			}else if(position.x==29 && position.y==0){
+				while(pace==0 || pace==4 || pace==2){
+					pace = (int) r.nextInt(4-1) + 1;
+				}
+				return pace;
+			}else if(position.x==29 && position.y==29){
+				while(pace==0 || pace==3 || pace==2){
+					pace = (int) r.nextInt(4-1) + 1;
+				}
+				return pace;
+			}else if(position.x!=29 && position.y!=29 && position.x!=0 && position.y!=29){
+				while(pace==0) {
+					pace = (int) r.nextInt(4 - 1) + 1;
+					return pace;
+				}
+			}
+
+
+			/*if(position.x==0) {
 				if(position.y==0) {
 					while(pace==0 || pace==4 || pace==1) {
 						pace = (int) r.nextInt(4-1) + 1;
+						if(map[position.x])
 					}
 					return pace;
 				}else if(position.y==29) {
@@ -73,7 +102,7 @@ public class Poupador extends ProgramaPoupador {
 				return pace;
 			}else {
 				pace = (int) r.nextInt(4-1) + 1;
-				return pace;
+				return pace;*/
 			}
 		/*if(map[position.x][position.y+1]<map[position.x][position.y] && map[position.x][position.y+1]!= OOB) {
 			System.out.println("Down");

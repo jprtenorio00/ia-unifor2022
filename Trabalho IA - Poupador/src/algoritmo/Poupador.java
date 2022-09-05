@@ -21,8 +21,6 @@ public class Poupador extends ProgramaPoupador {
 	int coin = 4;
 	int power = 5;
 
-	int thief = 200;
-
 	// emotions
 
 	float fear = 0;
@@ -176,33 +174,63 @@ public class Poupador extends ProgramaPoupador {
 	}
 
 	public int checkForThief() {
-		Integer[] vis =  new Integer[vision.length];
-		Arrays.setAll(vis, index -> vision[index]);
-
-		int[] thiefP = getIndexesOfItem(vis, thief);
+		// finds thieves within vision
+		int[] thiefP = getIndexesOfThief(vision);
 		Integer[] thiefPositions = new Integer[thiefP.length];
 		Arrays.setAll(thiefPositions, index -> thiefP[index]);
+		if (thiefPositions.length > 0) {
+			System.out.println("Thief Found");
 
 		/* Smell WIP
 		int[] RecentThiefTracks = getIndexesOfItem(smell, 3);
 		int[] SemiRecentThiefTracks = getIndexesOfItem(smell, 4);
 		int[] OldThiefTracks = getIndexesOfItem(smell, 5); */
 
-		Boolean[] directionSafety = new Boolean[4];
-		for (int a=0; a<4; a++){
-			if (a==0) directionSafety[a] = arrayContainsItem(thiefPositions, new Integer[]{0,1,2,3,4,5,6,7,8,9});
-			if (a==1) directionSafety[a] = arrayContainsItem(thiefPositions, new Integer[]{14,15,16,17,18,19,20,21,22,23});
-			if (a==2) directionSafety[a] = arrayContainsItem(thiefPositions, new Integer[]{3,4,8,9,12,13,17,18,22,23});
-			if (a==3) directionSafety[a] = arrayContainsItem(thiefPositions, new Integer[]{0,1,5,6,10,11,14,15,19,20});
-		}
+			// verifies what directions are available for escape
+			Boolean[] directionSafety = new Boolean[4];
+			for (int a=0; a<4; a++){
+				if (a==0) directionSafety[a] = arrayContainsItem(thiefPositions, new Integer[]{0,1,2,3,4,5,6,7,8,9});
+				if (a==1) directionSafety[a] = arrayContainsItem(thiefPositions, new Integer[]{14,15,16,17,18,19,20,21,22,23});
+				if (a==2) directionSafety[a] = arrayContainsItem(thiefPositions, new Integer[]{3,4,8,9,12,13,17,18,22,23});
+				if (a==3) directionSafety[a] = arrayContainsItem(thiefPositions, new Integer[]{0,1,5,6,10,11,14,15,19,20});
+			}
 
-		if (!arrayContainsItem(directionSafety, new Boolean[]{true})){
+			if (!arrayContainsItem(directionSafety, new Boolean[]{true})){
+				return -1;
+			}
+			else {
+				// select random unobstructed direction
+				int[] safeDirections = getIndexesOfItem(directionSafety, false);
+				while (true) {
+					int chosenDirection = getRandom(safeDirections)+1;
+					switch (chosenDirection) {
+						case 1:
+							if (vision[7] == 0 || vision[7] == coin){
+								return chosenDirection;
+							}
+						break;
+						case 2:
+							if (vision[16] == 0 || vision[16] == coin){
+								return chosenDirection;
+							}
+						break;
+						case 3:
+							if (vision[12] == 0 || vision[12] == coin){
+								return chosenDirection;
+							}
+						break;
+						case 4:
+							if (vision[11] == 0 || vision[11] == coin){
+								return chosenDirection;
+							}
+						break;
+					}
+				}
+			}
+		} else {
 			return -1;
 		}
-		else {
-			int[] safeDirections = getIndexesOfItem(directionSafety, true);
-			return getRandom(safeDirections);
-		}
+
 	}
 
 	public static int getRandom(int[] array) {
@@ -212,6 +240,10 @@ public class Poupador extends ProgramaPoupador {
 
 	public static <T> int[] getIndexesOfItem(T[] list, T item) {
 		return IntStream.range(0, list.length).filter(index -> list[index] == item).toArray();
+	}
+
+	public static int[] getIndexesOfThief(int[] list) {
+		return IntStream.range(0, list.length).filter(index -> list[index] >= 200 && list[index] < 300 ).toArray();
 	}
 
 	public static <T> boolean arrayContainsItem(T[] list, T[] items) {

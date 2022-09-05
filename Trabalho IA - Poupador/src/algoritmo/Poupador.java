@@ -179,7 +179,6 @@ public class Poupador extends ProgramaPoupador {
 		Integer[] thiefPositions = new Integer[thiefP.length];
 		Arrays.setAll(thiefPositions, index -> thiefP[index]);
 		if (thiefPositions.length > 0) {
-			System.out.println("Thief Found");
 
 		/* Smell WIP
 		int[] RecentThiefTracks = getIndexesOfItem(smell, 3);
@@ -189,43 +188,25 @@ public class Poupador extends ProgramaPoupador {
 			// verifies what directions are available for escape
 			Boolean[] directionSafety = new Boolean[4];
 			for (int a=0; a<4; a++){
-				if (a==0) directionSafety[a] = arrayContainsItem(thiefPositions, new Integer[]{0,1,2,3,4,5,6,7,8,9});
-				if (a==1) directionSafety[a] = arrayContainsItem(thiefPositions, new Integer[]{14,15,16,17,18,19,20,21,22,23});
-				if (a==2) directionSafety[a] = arrayContainsItem(thiefPositions, new Integer[]{3,4,8,9,12,13,17,18,22,23});
-				if (a==3) directionSafety[a] = arrayContainsItem(thiefPositions, new Integer[]{0,1,5,6,10,11,14,15,19,20});
+				if (a==0) directionSafety[a] = !(vision[7] == 0 || vision[7] == coin) || arrayContainsItem(thiefPositions, new Integer[]{0,1,2,3,4,5,6,7,8,9});
+				if (a==1) directionSafety[a] = !(vision[16] == 0 || vision[16] == coin) || arrayContainsItem(thiefPositions, new Integer[]{14,15,16,17,18,19,20,21,22,23});
+				if (a==2) directionSafety[a] = !(vision[12] == 0 || vision[12] == coin) || arrayContainsItem(thiefPositions, new Integer[]{3,4,8,9,12,13,17,18,22,23});
+				if (a==3) directionSafety[a] = !(vision[11] == 0 || vision[11] == coin) || arrayContainsItem(thiefPositions, new Integer[]{0,1,5,6,10,11,14,15,19,20});
 			}
+			
 
 			if (!arrayContainsItem(directionSafety, new Boolean[]{true})){
 				return -1;
 			}
+			else if(!arrayContainsItem(directionSafety, new Boolean[]{false})) {
+				return 0;
+			}
 			else {
-				// select random unobstructed direction
+				// select random escape route
 				int[] safeDirections = getIndexesOfItem(directionSafety, false);
-				while (true) {
-					int chosenDirection = getRandom(safeDirections)+1;
-					switch (chosenDirection) {
-						case 1:
-							if (vision[7] == 0 || vision[7] == coin){
-								return chosenDirection;
-							}
-						break;
-						case 2:
-							if (vision[16] == 0 || vision[16] == coin){
-								return chosenDirection;
-							}
-						break;
-						case 3:
-							if (vision[12] == 0 || vision[12] == coin){
-								return chosenDirection;
-							}
-						break;
-						case 4:
-							if (vision[11] == 0 || vision[11] == coin){
-								return chosenDirection;
-							}
-						break;
-					}
-				}
+				int chosenDirection = getRandom(safeDirections)+1;
+				return chosenDirection;
+			
 			}
 		} else {
 			return -1;

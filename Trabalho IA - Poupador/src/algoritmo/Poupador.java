@@ -23,86 +23,80 @@ public class Poupador extends ProgramaPoupador {
 		Point posBank;
 		boolean explore = true;
 		
+		//System.out.println(position.x+" "+position.y);
 		System.out.println(position.x+" "+position.y);
 		map[position.x][position.y]++;
 		
 		if(explore){
 			if(position.x==0 && position.y==0){
-				while(pace==0 || pace==4 || pace==1){
-					pace = (int) r.nextInt(4-1) + 1;
-					if(pace == 4 && map[position.x-1][position.y]>map[position.x][position.y]){
-						pace = 0;
-					}else if(pace == 1 && map[position.x][position.y-1]>map[position.x][position.y]){
-						pace = 0;
+					pace = (int) r.nextInt(2);
+					if(pace == 0){
+						pace = 4;
+					}else if(pace == 1){
+						pace = 2;
 					}
-				}
+				System.out.println(pace);
 				return pace;
 			}else if(position.x==29 && position.y==0){
-				while(pace==0 || pace==4 || pace==2){
-					pace = (int) r.nextInt(4-1) + 1;
-				}
+					pace = (int) r.nextInt(2);
+					if(pace == 0){
+						pace = 4;
+					}else if(pace == 1){
+						pace = 2;
+					}
+				System.out.println(pace);
 				return pace;
 			}else if(position.x==29 && position.y==29){
-				while(pace==0 || pace==3 || pace==2){
-					pace = (int) r.nextInt(4-1) + 1;
-				}
-				return pace;
-			}else if(position.x!=29 && position.y!=29 && position.x!=0 && position.y!=29){
-				while(pace==0) {
-					pace = (int) r.nextInt(4 - 1) + 1;
-					return pace;
-				}
-			}
-
-
-			/*if(position.x==0) {
-				if(position.y==0) {
-					while(pace==0 || pace==4 || pace==1) {
-						pace = (int) r.nextInt(4-1) + 1;
-						if(map[position.x])
+					pace = (int) r.nextInt(2);
+					if(pace == 0){
+						pace = 3;
+					}else if(pace == 1){
+						pace = 1;
 					}
-					return pace;
-				}else if(position.y==29) {
-					while(pace==0 || pace==4 || pace==2) {
-						pace = (int) r.nextInt(4-1) + 1;
-					}
-					return pace;
-				}else{
-					while(pace==0 || pace==4) {
-						pace = (int) r.nextInt(4-1) + 1;
-					}
-					return pace;
-				}
-			}else if(position.x==29){
-				if(position.y==0) {
-					while(pace==0 || pace==3 || pace==1) {
-						pace = (int) r.nextInt(4-1) + 1;
-					}
-					return pace;
-				}else if(position.y==29) {
-					while(pace==0 || pace==3 || pace==2) {
-						pace = (int) r.nextInt(4-1) + 1;
-					}
-					return pace;
-				}else{
-					while(pace==0 || pace==3) {
-						pace = (int) r.nextInt(4-1) + 1;
-					}
-					return pace;
-				}
-			}else if(position.y==0){
-				while(pace==0 || pace==1) {
-					pace = (int) r.nextInt(4-1) + 1;
-				}
 				return pace;
 			}else if(position.y==29){
-				while(pace==0 || pace==2) {
-					pace = (int) r.nextInt(4-1) + 1;
+				pace = (int) r.nextInt(3);
+				if(pace == 0){
+					pace = 1;
+				}else if(pace == 2){
+					pace = 3;
+				}else if(pace == 3){
+					pace = 4;
 				}
 				return pace;
-			}else {
-				pace = (int) r.nextInt(4-1) + 1;
-				return pace;*/
+			}else if(position.x==29) {
+				pace = (int) r.nextInt(3);
+				if(pace == 0){
+					pace = 2;
+				}else if(pace == 2){
+					pace = 1;
+				}else if(pace == 3){
+					pace = 3;
+				}
+				return pace;
+			}else if(position.x==0) {
+				pace = (int) r.nextInt(3);
+				if(pace == 0){
+					pace = 1;
+				}else if(pace == 2){
+					pace = 2;
+				}else if(pace == 3){
+					pace = 4;
+				}
+				return pace;				
+			}else if(position.x==29) {
+				pace = (int) r.nextInt(3);
+				if(pace == 0){
+					pace = 1;
+				}else if(pace == 2){
+					pace = 2;
+				}else if(pace == 3){
+					pace = 3;
+				}
+				return pace;				
+			}else if(position.x!=29 && position.y!=29 && position.x!=0 && position.y!=29){
+				pace = r.nextInt(4-1)+1;
+				return pace;
 			}
 		/*if(map[position.x][position.y+1]<map[position.x][position.y] && map[position.x][position.y+1]!= OOB) {
 			System.out.println("Down");

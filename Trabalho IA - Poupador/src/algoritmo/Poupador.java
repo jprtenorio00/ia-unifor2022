@@ -204,8 +204,7 @@ public class Poupador extends ProgramaPoupador {
 			else {
 				// select random escape route
 				int[] safeDirections = getIndexesOfItem(directionSafety, false);
-				int chosenDirection = getRandom(safeDirections)+1;
-				return chosenDirection;
+				return getRandom(safeDirections)+1;
 			
 			}
 		} else {

@@ -30,76 +30,77 @@ public class Poupador extends ProgramaPoupador {
 		if(explore){
 			if(position.x==0 && position.y==0){
 					pace = (int) r.nextInt(2);
-					if(pace == 0){
+					if(pace == 0 && map[position.x-1][position.y]<map[position.x][position.y]){
 						pace = 4;
-					}else if(pace == 1){
+					}else if(pace == 1 && map[position.x][position.y+1]<map[position.x][position.y]){
 						pace = 2;
 					}
 				System.out.println(pace);
 				return pace;
 			}else if(position.x==29 && position.y==0){
 					pace = (int) r.nextInt(2);
-					if(pace == 0){
+					if(pace == 0 && map[position.x-1][position.y]<map[position.x][position.y]){
 						pace = 4;
-					}else if(pace == 1){
+					}else if(pace == 1 && map[position.x][position.y+1]<map[position.x][position.y]){
 						pace = 2;
 					}
 				System.out.println(pace);
 				return pace;
 			}else if(position.x==29 && position.y==29){
 					pace = (int) r.nextInt(2);
-					if(pace == 0){
+					if(pace == 0 && map[position.x+1][position.y]<map[position.x][position.y]){
 						pace = 3;
-					}else if(pace == 1){
+					}else if(pace == 1 && map[position.x][position.y-1]<map[position.x][position.y]){
 						pace = 1;
 					}
 				return pace;
 			}else if(position.y==29){
 				pace = (int) r.nextInt(3);
-				if(pace == 0){
+				if(pace == 0 && map[position.x][position.y-1]<map[position.x][position.y]){
 					pace = 1;
-				}else if(pace == 2){
+				}else if(pace == 2 && map[position.x+1][position.y]<map[position.x][position.y]){
 					pace = 3;
-				}else if(pace == 3){
+				}else if(pace == 3 && map[position.x-1][position.y]<map[position.x][position.y]){
 					pace = 4;
 				}
 				return pace;
 			}else if(position.x==29) {
 				pace = (int) r.nextInt(3);
-				if(pace == 0){
+				if(pace == 0 && map[position.x][position.y+1]<map[position.x][position.y]){
 					pace = 2;
-				}else if(pace == 2){
+				}else if(pace == 2 && map[position.x][position.y-1]<map[position.x][position.y]){
 					pace = 1;
-				}else if(pace == 3){
+				}else if(pace == 3 && map[position.x+1][position.y]<map[position.x][position.y]){
 					pace = 3;
 				}
 				return pace;
 			}else if(position.x==0) {
 				pace = (int) r.nextInt(3);
-				if(pace == 0){
+				if(pace == 0 && map[position.x][position.y-1]<map[position.x][position.y]){
 					pace = 1;
-				}else if(pace == 2){
+				}else if(pace == 2 && map[position.x][position.y+1]<map[position.x][position.y]){
 					pace = 2;
-				}else if(pace == 3){
+				}else if(pace == 3 && map[position.x-1][position.y]<map[position.x][position.y]){
 					pace = 4;
 				}
-				return pace;				
-			}else if(position.x==29) {
-				pace = (int) r.nextInt(3);
-				if(pace == 0){
-					pace = 1;
-				}else if(pace == 2){
-					pace = 2;
-				}else if(pace == 3){
-					pace = 3;
-				}
-				return pace;				
+				return pace;							
 			}else if(position.x!=29 && position.y!=29 && position.x!=0 && position.y!=29){
 				pace = r.nextInt(4-1)+1;
+				if(pace == 1 && map[position.x][position.y-1]<map[position.x][position.y]){
+					pace = 1;
+				}else if(pace == 2 && map[position.x][position.y+1]<map[position.x][position.y]){
+					pace = 2;
+				}else if(pace == 3 && map[position.x+1][position.y]<map[position.x][position.y]){
+					pace = 3;
+				}else if(pace == 4 && map[position.x-1][position.y]<map[position.x][position.y]){
+					pace = 4;
+				}else {
+					pace = 0;
+				}
 				return pace;
-			}
+			} 
 		/*if(map[position.x][position.y+1]<map[position.x][position.y] && map[position.x][position.y+1]!= OOB) {
-			System.out.println("Down");
+			System.out.println("Down"); teste pra achar a pasta
 			return 2;
 		}else if(map[position.x][position.y-1]<map[position.x][position.y] && map[position.x][position.y-1]!= OOB) {
 			System.out.println("Up");

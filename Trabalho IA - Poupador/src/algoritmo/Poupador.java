@@ -3,6 +3,9 @@ package algoritmo;
 import java.awt.Point;
 import java.util.Arrays;
 import java.util.Random;
+import java.io.*;
+import java.util.*;
+
 
 public class Poupador extends ProgramaPoupador {
 
@@ -10,8 +13,12 @@ public class Poupador extends ProgramaPoupador {
 	int coin = 4;
 	int bank = 3;
 	int OOB = -1;
+	int turno = 0;
 	Random r = new Random();
 	int[][] map = new int[30][30];
+	int[][] points = new int[30][30];
+	boolean explore = true;
+	
 	
 	
 	@Override
@@ -21,11 +28,27 @@ public class Poupador extends ProgramaPoupador {
 		int pace = 1;
 		Point position = this.sensor.getPosicao();
 		Point posBank;
-		boolean explore = true;
+		
+		
+		
 		
 		//System.out.println(position.x+" "+position.y);
-		System.out.println(position.x+" "+position.y);
+		
 		map[position.x][position.y]++;
+		
+		//Método pra trocar com as funções do Andres; A cada 5 turnos ele pode mudar o corportamento.
+		turno++;
+		
+			/*if(turno%5==0) {
+				int aux = (int) r.nextInt(2);
+				if(aux == 0) {
+					explore=true;
+				}else if(aux == 1){
+					explore=false;
+				}
+				System.out.println(explore);
+				}*/
+		
 		
 		if(explore){
 			if(position.x==0 && position.y==0){
@@ -36,6 +59,8 @@ public class Poupador extends ProgramaPoupador {
 						pace = 2;
 					}
 				System.out.println(pace);
+				points[position.x][position.y+1]=vision[16];
+				points[position.x+1][position.y]=vision[12];
 				return pace;
 			}else if(position.x==29 && position.y==0){
 					pace = (int) r.nextInt(2);
@@ -45,6 +70,8 @@ public class Poupador extends ProgramaPoupador {
 						pace = 2;
 					}
 				System.out.println(pace);
+				points[position.x][position.y+1]=vision[16];
+				points[position.x-1][position.y]=vision[11];
 				return pace;
 			}else if(position.x==29 && position.y==29){
 					pace = (int) r.nextInt(2);
@@ -53,7 +80,9 @@ public class Poupador extends ProgramaPoupador {
 					}else if(pace == 1 && map[position.x][position.y-1]<map[position.x][position.y]){
 						pace = 1;
 					}
-				return pace;
+					points[position.x][position.y-1]=vision[7];
+					points[position.x-1][position.y]=vision[11];
+					return pace;
 			}else if(position.y==29){
 				pace = (int) r.nextInt(3);
 				if(pace == 0 && map[position.x][position.y-1]<map[position.x][position.y]){
@@ -63,6 +92,22 @@ public class Poupador extends ProgramaPoupador {
 				}else if(pace == 3 && map[position.x-1][position.y]<map[position.x][position.y]){
 					pace = 4;
 				}
+				points[position.x][position.y-1]=vision[7];
+				points[position.x+1][position.y]=vision[12];
+				points[position.x-1][position.y]=vision[11];
+				return pace;
+			}else if(position.y==0){
+				pace = (int) r.nextInt(3);
+				if(pace == 0 && map[position.x][position.y+1]<map[position.x][position.y]){
+					pace = 2;
+				}else if(pace == 2 && map[position.x+1][position.y]<map[position.x][position.y]){
+					pace = 3;
+				}else if(pace == 3 && map[position.x-1][position.y]<map[position.x][position.y]){
+					pace = 4;
+				}
+				points[position.x][position.y+1]=vision[16];
+				points[position.x+1][position.y]=vision[12];
+				points[position.x-1][position.y]=vision[11];
 				return pace;
 			}else if(position.x==29) {
 				pace = (int) r.nextInt(3);
@@ -71,8 +116,11 @@ public class Poupador extends ProgramaPoupador {
 				}else if(pace == 2 && map[position.x][position.y-1]<map[position.x][position.y]){
 					pace = 1;
 				}else if(pace == 3 && map[position.x+1][position.y]<map[position.x][position.y]){
-					pace = 3;
+					pace = 4;
 				}
+				points[position.x][position.y+1]=vision[16];
+				points[position.x][position.y-1]=vision[7];
+				points[position.x-1][position.y]=vision[11];
 				return pace;
 			}else if(position.x==0) {
 				pace = (int) r.nextInt(3);
@@ -83,6 +131,9 @@ public class Poupador extends ProgramaPoupador {
 				}else if(pace == 3 && map[position.x-1][position.y]<map[position.x][position.y]){
 					pace = 4;
 				}
+				points[position.x][position.y+1]=vision[16];
+				points[position.x][position.y-1]=vision[7];
+				points[position.x+1][position.y]=vision[12];
 				return pace;							
 			}else if(position.x!=29 && position.y!=29 && position.x!=0 && position.y!=29){
 				pace = r.nextInt(4-1)+1;
@@ -97,6 +148,10 @@ public class Poupador extends ProgramaPoupador {
 				}else {
 					pace = 0;
 				}
+				points[position.x][position.y+1]=vision[16];
+				points[position.x][position.y-1]=vision[7];
+				points[position.x+1][position.y]=vision[12];
+				points[position.x-1][position.y]=vision[11];
 				return pace;
 			} 
 		/*if(map[position.x][position.y+1]<map[position.x][position.y] && map[position.x][position.y+1]!= OOB) {

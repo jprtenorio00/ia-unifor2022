@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 import java.util.stream.IntStream;
+import java.awt.geom.Point2D;
 
 //import java.awt.Point;
 
@@ -42,11 +43,13 @@ public class Poupador extends ProgramaPoupador {
 
 	// Memory
 	int[][] map = new int[30][30];
-	Point bankLocation;
+	Point bankLocation = new Point(8, 8);
 	int[][] locations = new int[30][30];
+	Point pastLocation;
 
 	@Override
 	public int acao() {
+		Point position = this.sensor.getPosicao();
 		vision = this.sensor.getVisaoIdentificacao();
 		smell = this.sensor.getAmbienteOlfatoPoupador();
 		wallet = this.sensor.getNumeroDeMoedas();
@@ -63,9 +66,11 @@ public class Poupador extends ProgramaPoupador {
 		int[] escape_directions = EscapeRouteDirections();
 		if (escape_directions.length == 4){
 			if (temMoedaProxima() && wallet < 10){
+				pastLocation = new Point(position.x, position.y);
 				return pegaMoeda();
 			} else {
 				if (wallet > 10 && temBancoProximo()) {
+					pastLocation = new Point(position.x, position.y);
 					return vaiNoBanco();
 				} else {
 					return explore();
@@ -80,7 +85,7 @@ public class Poupador extends ProgramaPoupador {
 				if (optimal_directions.size() > 0 && pegarpastilha() && immunity == 0) {
 					int[] directions = Arrays.stream(optimal_directions.toArray()).mapToInt(i -> (int) i).toArray();
 					int choice = getRandom(directions);
-					System.out.println("My Choice: "+choice);
+					pastLocation = new Point(position.x, position.y);
 					return choice;
 				}
 				else {
@@ -89,6 +94,7 @@ public class Poupador extends ProgramaPoupador {
 						escape.add(direction);
 					}
 					int[] directions = Arrays.stream(escape.toArray()).mapToInt(i -> (int) i).toArray();
+					pastLocation = new Point(position.x, position.y);
 					return getRandom(directions);
 				}
 
@@ -101,6 +107,42 @@ public class Poupador extends ProgramaPoupador {
 				}
 			}
 		}
+	}
+
+	public Point nextLocation(Point current, int move){
+		if (move == cima) {
+			return new Point(current.x, current.y-1);
+		}
+		else if(move == baixo){
+			return new Point(current.x, current.y+1);
+		}
+		else if(move == direita){
+			return new Point(current.x+1, current.y);
+		}
+		else{
+			return new Point(current.x-1, current.y);
+		}
+	}
+
+	public boolean closerToBank(Point current, int direction){
+		double current_distance_from_bank = Point2D.distance(current.x, current.y, bankLocation.x, bankLocation.y);
+		Point newLocation;
+		if (direction == cima) {
+			newLocation = new Point(current.x, current.y-1);
+		}
+		else if(direction == baixo){
+			newLocation = new Point(current.x, current.y+1);
+		}
+		else if(direction == direita){
+			newLocation =  new Point(current.x+1, current.y);
+		}
+		else{
+			newLocation = new Point(current.x-1, current.y);
+			newLocation = new Point(current.x-1, current.y);
+		}
+		double new_distance_from_bank = Point2D.distance(newLocation.x, newLocation.y, bankLocation.x, bankLocation.y);
+
+		return new_distance_from_bank < current_distance_from_bank;
 	}
 
 	public int explore() {
@@ -135,12 +177,23 @@ public class Poupador extends ProgramaPoupador {
 		}
 		for (int i = 1; i < lista.length; i++) {
 			if(lista[min]==lista[i]) {
-				empates.add(i);
+				if (closerToBank(position, i) && wallet > 5) {
+					for (int a = 0; a < wallet; a++) {
+						empates.add(i);
+					}
+				} else {
+					empates.add(i);
+				}
 			}
 		}
 		if(empates.size()>0){
 			int rnd = new Random().nextInt(empates.size());
 			int choice = empates.get(rnd);
+			while(pastLocation == nextLocation(position, choice)) {
+				rnd = new Random().nextInt(empates.size());
+				choice = empates.get(rnd);
+			}
+
 			switch (choice){
 				case cima:
 					map[position.x][position.y-1]++;
@@ -172,6 +225,7 @@ public class Poupador extends ProgramaPoupador {
 				map[position.x-1][position.y]++;
 				break;
 		}
+		pastLocation = new Point(position.x, position.y);
 		return min;
 
 	}
@@ -207,19 +261,15 @@ public class Poupador extends ProgramaPoupador {
 		// Visualizando o banco e pegando sua posição
 		if (vision[7] == bank || vision[2] == bank) {
 			posBank = position;
-			System.out.println("Pos. do banco: " + posBank);
 			return cima;
 		} else if (vision[16] == bank || vision[21] == bank) {
 			posBank = position;
-			System.out.println("Pos. do banco: " + posBank);
 			return baixo;
 		}else if (vision[11] == bank || vision[10] == bank) {
 			posBank = position;
-			System.out.println("Pos. do banco: " + posBank);
 			return esquerda;
 		} else if (vision[12] == bank || vision[13] == bank) {
 			posBank = position;
-			System.out.println("Pos. do banco: " + posBank);
 			return direita;
 		}
 
@@ -441,28 +491,10 @@ public class Poupador extends ProgramaPoupador {
 				}
 
 				//prioritize bank
-				if (wallet >= 10 && temBancoProximo()){
-					if (vision[7] == bank || vision[2] == bank){
-						for (int i = 0; i < wallet ; i++){
-							escape_r.add(cima);
-						}
+				if (wallet >= 5 && temBancoProximo()){
+					for (int i = 0; i < wallet ; i++){
+						escape_r.add(vaiNoBanco());
 					}
-					if (vision[16] == bank || vision[21] == bank){
-						for (int i = 0; i < wallet ; i++){
-							escape_r.add(baixo);
-						}
-					}
-					if (vision[12] == bank || vision[13] == bank){
-						for (int i = 0; i < wallet ; i++){
-							escape_r.add(direita);
-						}
-					}
-					if (vision[11] == bank || vision[10] == bank){
-						for (int i = 0; i < wallet ; i++){
-							escape_r.add(esquerda);
-						}
-					}
-
 				}
 				int[] escape_routes = new int[escape_r.size()];
 				int count = 0;
